@@ -1,5 +1,8 @@
-import React from 'react';
-import { MovieCard } from "./MovieCard"
+import { useState, useEffect } from 'react';
+import { api } from '../services/api';
+import { MovieCard } from "./MovieCard";
+
+import '../styles/content.scss';
 
 interface GenreResponseProps {
   id: number;
@@ -20,11 +23,18 @@ interface MovieProps {
 
 interface ContentProps {
   selectedGenre: GenreResponseProps,
-  movies: MovieProps[]
+  selectedGenreId: number,
 }
 
-export const Content = ({selectedGenre, movies}:ContentProps) => {
-  // Complete aqui
+export const Content = ({selectedGenre, selectedGenreId}:ContentProps) => {  
+  const [movies, setMovies] = useState<MovieProps[]>([]);
+
+  useEffect(() => {
+    api.get<MovieProps[]>(`movies/?Genre_id=${selectedGenreId}`).then(response => {
+      setMovies(response.data);
+    });    
+  }, [selectedGenreId]);
+
 
   return(
     <div className="container">
